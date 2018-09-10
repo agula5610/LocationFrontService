@@ -1,4 +1,4 @@
-package com.luxiaochun.frontlocationservice;
+package com.luxiaochun.frontlocationservice.service;
 
 import android.location.Location;
 

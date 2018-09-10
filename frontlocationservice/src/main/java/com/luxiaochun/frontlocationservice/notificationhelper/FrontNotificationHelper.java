@@ -1,4 +1,4 @@
-package com.luxiaochun.frontlocationservice;
+package com.luxiaochun.frontlocationservice.notificationhelper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,22 +13,21 @@ import android.support.v4.app.NotificationCompat;
  * Author: jun
  * Date: 2018-08-08 11:45
  */
-public class FrontNotificationManager {
+public class FrontNotificationHelper {
     private final Context mContext;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
-    private Notification notification;
     private static final String CHANNEL_ID = "front_service";
     private static final CharSequence CHANNEL_NAME = "front_service_channel";
-    private static final int NOTIFY_ID = 1;
 
-    private FrontNotificationManager(Context mContext) {
+    private FrontNotificationHelper(Context mContext) {
         this.mContext = mContext;
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        setUpNotification();
     }
 
-    public static FrontNotificationManager getIstance(Context mContext) {
-        return new FrontNotificationManager(mContext);
+    public static FrontNotificationHelper getIstance(Context mContext) {
+        return new FrontNotificationHelper(mContext);
     }
 
     /**
@@ -50,23 +49,14 @@ public class FrontNotificationManager {
             channel.enableLights(false);
             mNotificationManager.createNotificationChannel(channel);
         }
-
         mBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
-        mBuilder.setContentTitle("前台服务正在运行……")
-                .setContentText("正在进行定位服务")
-                .setOngoing(true)
-                .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis());
-        notification = mBuilder.build();
-        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
     }
 
     /**
-     * 取消通知
+     * 获取通知
+     * @return
      */
-    public void cancel() {
-        if (mNotificationManager != null) {
-            mNotificationManager.cancel(NOTIFY_ID);
-        }
+    public Notification getNotification() {
+        return mBuilder == null ? null : mBuilder.build();
     }
 }

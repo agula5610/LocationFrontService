@@ -1,4 +1,4 @@
-package com.luxiaochun.frontlocationservice;
+package com.luxiaochun.frontlocationservice.locationprovider;
 
 import android.Manifest;
 import android.content.Context;
@@ -10,32 +10,31 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import com.luxiaochun.frontlocationservice.service.LocationCallback;
+
 /**
  * ProjectName: LocationFrontService
- * PackageName: com.luxiaochun.frontlocationservice
+ * PackageName: com.luxiaochun.frontlocationservice.locationprovider
  * Author: jun
- * Date: 2018-09-10 11:14
+ * Date: 2018-09-10 17:11
  */
-public class LocationHelper {
+public class RawLocationProvider {
     private LocationManager locationManager;
     private LocationCallback listener;
-    private static LocationHelper instance;
+    private static RawLocationProvider instance;
     private Context mContext;
 
-    public static synchronized LocationHelper getInstance(Context mContext) {
+    public static synchronized RawLocationProvider getInstance(Context mContext, LocationCallback listener) {
         if (instance == null) {
-            instance = new LocationHelper(mContext);
+            instance = new RawLocationProvider(mContext, listener);
         }
         return instance;
     }
 
-    private LocationHelper(Context mContext) {
+    private RawLocationProvider(Context mContext, LocationCallback listener) {
         this.mContext = mContext;
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-    }
-
-    public void setListener(LocationCallback listener) {
         this.listener = listener;
+        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
     }
 
     /**
