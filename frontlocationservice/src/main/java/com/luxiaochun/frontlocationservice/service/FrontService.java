@@ -10,7 +10,7 @@ import com.luxiaochun.frontlocationservice.locationprovider.LocationHelper;
 import com.luxiaochun.frontlocationservice.notificationhelper.FrontNotificationHelper;
 
 /**
- * 后台下载
+ * 前台服务
  */
 public class FrontService extends Service {
     private static final int NOTIFY_ID = 1;
