@@ -22,7 +22,15 @@ android {
         }
     }
 
+    sourceSets{
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

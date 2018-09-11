@@ -1,7 +1,5 @@
 package com.luxiaochun.frontlocationservice.service;
 
-import android.location.Location;
-
 /**
  * ProjectName: LocationFrontService
  * PackageName: com.luxiaochun.frontlocationservice
@@ -9,5 +7,5 @@ import android.location.Location;
  * Date: 2018-09-10 11:36
  */
 public interface LocationCallback {
-    void onLocation(Location location);
+    void onLocation(String latitude, String longitude);
 }

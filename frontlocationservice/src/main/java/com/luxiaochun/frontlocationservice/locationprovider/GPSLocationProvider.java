@@ -18,29 +18,32 @@ import com.luxiaochun.frontlocationservice.service.LocationCallback;
  * Author: jun
  * Date: 2018-09-10 17:11
  */
-public class RawLocationProvider {
+public class GPSLocationProvider {
     private LocationManager locationManager;
     private LocationCallback listener;
-    private static RawLocationProvider instance;
-    private Context mContext;
+    private static GPSLocationProvider instance;
+    private long intervalTime = 10 * 1000;
 
-    public static synchronized RawLocationProvider getInstance(Context mContext, LocationCallback listener) {
+    public static synchronized GPSLocationProvider getInstance() {
         if (instance == null) {
-            instance = new RawLocationProvider(mContext, listener);
+            instance = new GPSLocationProvider();
         }
         return instance;
     }
 
-    private RawLocationProvider(Context mContext, LocationCallback listener) {
-        this.mContext = mContext;
-        this.listener = listener;
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+    private GPSLocationProvider() {
+
+    }
+
+    public void setIntervalTime(long intervalTime) {
+        this.intervalTime = intervalTime;
     }
 
     /**
      * 开始定位
      */
-    public void startLocation() {
+    public void startLocation(Context mContext, LocationCallback listener) {
+        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         criteria.setAltitudeRequired(false);
@@ -59,16 +62,18 @@ public class RawLocationProvider {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(best, 3000, 0, MyLocationListener);
+        this.listener = listener;
+        locationManager.requestLocationUpdates(best, intervalTime, 0, MyLocationListener);
     }
 
     /**
      * 停止定位服务
      */
     public void stopLocation() {
-        if (MyLocationListener == null)
+        if (locationManager == null || MyLocationListener == null)
             return;
         locationManager.removeUpdates(MyLocationListener);
+        instance = null;
     }
 
     /**
@@ -78,7 +83,7 @@ public class RawLocationProvider {
         @Override
         public void onLocationChanged(Location location) {
             if (listener != null && location != null) {
-                listener.onLocation(location);
+                listener.onLocation(location.getLatitude() + "", location.getLongitude() + "");
             }
         }
 

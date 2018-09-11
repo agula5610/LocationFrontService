@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
+import com.luxiaochun.frontlocationservice.locationprovider.LocationHelper;
 import com.luxiaochun.frontlocationservice.notificationhelper.FrontNotificationHelper;
 
 /**
@@ -26,13 +28,22 @@ public class FrontService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForegroundService();
+        startForegroundNotification();
     }
 
-    private void setUpNotification() {
+    /**
+     * 开启前台服务，并显示通知
+     */
+    private void startForegroundNotification() {
         FrontNotificationHelper noHelper = FrontNotificationHelper.getIstance(this);
         if (noHelper.getNotification() != null)
             startForeground(NOTIFY_ID, noHelper.getNotification());
+        LocationHelper.startLocation(this, 10000, new LocationCallback() {
+            @Override
+            public void onLocation(String latitude, String longitude) {
+                Log.i("===FrontService===", "纬度：" + latitude + "；经度：" + longitude);
+            }
+        });
     }
 
     @Override
@@ -47,6 +58,7 @@ public class FrontService extends Service {
 
     @Override
     public void onDestroy() {
+        LocationHelper.stopLocation();
         super.onDestroy();
     }
 }
